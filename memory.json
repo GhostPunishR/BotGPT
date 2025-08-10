@@ -1,0 +1,7 @@
+{
+  "CHANNELS": [
+    { "role": "system", "content": "BotGPT est un chatbot convivial." },
+    { "role": "user", "content": "Salut bot !" },
+    { "role": "assistant", "content": "Salut à toi 😄" }
+  ]
+}
