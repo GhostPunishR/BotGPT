@@ -29,9 +29,9 @@ Récupérer les fichiers (.env, index.js, memory.json) et le mettre dans votre d
 
 ## Configuration
 
-- Modifie la constante 'CHANNELS' dans 'index.js' pour définir le salon où le bot répond.
+- Modifie la constante 'CHANNEL_ID1, CHANNEL_ID2' dans 'index.js' pour définir le salon où le bot répond.
 - Modifie la constante du model: 'gpt-3.5-turbo' dans 'index.js' et mettre votre version souhaitée.
-- Modifie la constante "CHANNELS" dans 'memory.json' pour définir le salon du bot
+- Modifie la constante "CHANNEL_ID1, CHANNEL_ID2" dans 'memory.json' pour définir le salon du bot
 - Ajoute ton TOKEN Discord et ta Clef API OpenAI dans '.env'
 - Change le préfixe dans 'IGNORE_PREFIX' si besoin.
 
