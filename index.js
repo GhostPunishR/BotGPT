@@ -3,13 +3,21 @@ require('dotenv/config');
 const { Client, GatewayIntentBits } = require('discord.js');
 const { OpenAI } = require('openai');
 
-// ==== Vérifications des variables d'environnement ====
+// ==== Vérification ENV ====
 if (!process.env.OPENAI_KEY || !process.env.TOKEN) {
     console.error("Clé API OpenAI ou Token Discord manquant !");
     process.exit(1);
 }
 
-// ==== Initialisation du client Discord ====
+// ==== Config ====
+const IGNORE_PREFIX = "!";
+const ALLOWED_CHANNELS = ['CHANNEL_ID1', 'CHANNEL_ID2']; // IDs salons autorisés
+const MEMORY_FILE = 'memory.json';
+const MESSAGE_LIMIT = 20;
+const INACTIVITY_LIMIT_DAYS = 30;
+const ANTI_SPAM_MS = 3000;
+
+// ==== Initialisation ====
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
@@ -18,34 +26,24 @@ const client = new Client({
         GatewayIntentBits.MessageContent
     ],
 });
+const openai = new OpenAI({ apiKey: process.env.OPENAI_KEY });
 
-const IGNORE_PREFIX = "!";
-const CHANNELS = ['CHANNELS']; // ID des salons autorisés
-const MEMORY_FILE = 'memory.json';
-const MESSAGE_LIMIT = 20;
-const INACTIVITY_LIMIT_DAYS = 30; // Purge après 30 jours
-
-const openai = new OpenAI({
-    apiKey: process.env.OPENAI_KEY,
-});
+let userConversations = {};
+const lastMessageTime = {};
 
 // ==== Chargement mémoire ====
-let userConversations = {};
 if (fs.existsSync(MEMORY_FILE)) {
     try {
         userConversations = JSON.parse(fs.readFileSync(MEMORY_FILE, 'utf8'));
     } catch (err) {
-        console.error("Erreur de lecture de la mémoire:", err);
-        userConversations = {};
+        console.error("Erreur de lecture mémoire :", err);
     }
 }
 
-// ==== Sauvegarde mémoire ====
 function saveMemory() {
     fs.writeFileSync(MEMORY_FILE, JSON.stringify(userConversations, null, 2));
 }
 
-// ==== Purge mémoire ancienne ====
 function purgeOldMemory() {
     const now = Date.now();
     for (let userId in userConversations) {
@@ -57,81 +55,65 @@ function purgeOldMemory() {
 }
 purgeOldMemory();
 
-// ==== Anti-spam ====
-const lastMessageTime = {};
-
+// ==== Événement : Bot prêt ====
 client.on('ready', () => {
     console.log(`Bot connecté en tant que ${client.user.tag}`);
 });
 
+// ==== Événement : Message ====
 client.on('messageCreate', async (message) => {
     if (message.author.bot) return;
     if (message.content.startsWith(IGNORE_PREFIX)) return;
-    if (!CHANNELS.includes(message.channelId) && !message.mentions.users.has(client.user.id)) return;
+    if (!ALLOWED_CHANNELS.includes(message.channelId) && !message.mentions.users.has(client.user.id)) return;
 
-    // Anti-spam : 3 sec minimum entre messages par utilisateur
-    if (lastMessageTime[message.author.id] && Date.now() - lastMessageTime[message.author.id] < 3000) {
+    // Anti-spam
+    if (lastMessageTime[message.author.id] && Date.now() - lastMessageTime[message.author.id] < ANTI_SPAM_MS) {
         return;
     }
     lastMessageTime[message.author.id] = Date.now();
 
-    // Envoi typing
+    // "Typing..." pendant le traitement
     await message.channel.sendTyping();
-    const sendTypingInterval = setInterval(() => {
-        message.channel.sendTyping();
-    }, 5000);
+    const typingInterval = setInterval(() => message.channel.sendTyping(), 5000);
 
-    // Initialiser mémoire si pas déjà
+    // Initialiser mémoire utilisateur
     if (!userConversations[message.author.id]) {
         userConversations[message.author.id] = {
-            history: [{ role: 'system', content: 'BotGPT est un chatbot convivial.' }],
+            history: [{ role: 'system', content: 'BotGPT est un chatbot amical et serviable.' }],
             lastInteraction: Date.now()
         };
     }
 
-    // Ajouter message user
-    userConversations[message.author.id].history.push({
-        role: 'user',
-        content: message.content
-    });
+    // Ajouter message utilisateur
+    userConversations[message.author.id].history.push({ role: 'user', content: message.content });
     userConversations[message.author.id].lastInteraction = Date.now();
 
-    // Limiter taille historique
+    // Limiter historique
     if (userConversations[message.author.id].history.length > MESSAGE_LIMIT) {
         userConversations[message.author.id].history.splice(1, userConversations[message.author.id].history.length - MESSAGE_LIMIT);
     }
 
-    // ==== Appel API OpenAI ====
-    let response;
+    // ==== Requête OpenAI ====
+    let botReply = "";
     try {
-        response = await openai.chat.completions.create({
+        const response = await openai.chat.completions.create({
             model: 'gpt-3.5-turbo',
             messages: userConversations[message.author.id].history,
         });
+
+        botReply = response?.choices?.[0]?.message?.content || "Pas de réponse.";
     } catch (error) {
-        console.error('Erreur OpenAI:', error);
-        clearInterval(sendTypingInterval);
-        return message.reply("Problème avec l'API OpenAI. Réessaie plus tard.");
+        console.error("Erreur API OpenAI :", error.message);
+        botReply = "Problème avec l'IA, réessaie plus tard.";
+    } finally {
+        clearInterval(typingInterval);
     }
-
-    clearInterval(sendTypingInterval);
-
-    // Vérifier réponse vide
-    if (!response?.choices?.length || !response.choices[0].message?.content) {
-        return message.reply("Pas de réponse reçue de l'IA.");
-    }
-
-    const botReply = response.choices[0].message.content;
 
     // Ajouter réponse bot à l'historique
-    userConversations[message.author.id].history.push({
-        role: 'assistant',
-        content: botReply
-    });
-
+    userConversations[message.author.id].history.push({ role: 'assistant', content: botReply });
     saveMemory();
 
-    // Découper si > 2000 caractères
+    // Découpage si message > 2000 caractères
     const chunkSize = 2000;
     for (let i = 0; i < botReply.length; i += chunkSize) {
         await message.reply(botReply.substring(i, i + chunkSize));
