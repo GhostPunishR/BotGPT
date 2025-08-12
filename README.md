@@ -31,7 +31,6 @@ Chaque utilisateur dispose de sa propre mémoire de conversation, sauvegardée l
 
 ## Configuration
 
-- **Salon dédié** : modifier la constante `CHANNEL_ID` dans `index.js` pour définir le salon où le bot répond.
 - **Modèle OpenAI** : changer `model: 'gpt-3.5-turbo'` dans `index.js` si vous voulez utiliser un autre modèle.
 - **Variables d’environnement** : dans `.env`, renseigner :
   ```
@@ -47,10 +46,10 @@ Chaque utilisateur dispose de sa propre mémoire de conversation, sauvegardée l
 
 | Paramètre                | Fichier        | Description |
 |--------------------------|---------------|-------------|
-| `CHANNEL_ID`             | `index.js`    | ID du salon Discord où le bot répondra uniquement |
 | `model`                  | `index.js`    | Modèle OpenAI utilisé (`gpt-3.5-turbo`, `gpt-4`, etc.) |
 | `DISCORD_TOKEN`          | `.env`        | Token de votre bot Discord |
 | `OPENAI_API_KEY`         | `.env`        | Clé API OpenAI |
+| `CHANNEL_ID`             | `.env`        | ID du salon Discord où le bot répondra uniquement |
 | `IGNORE_PREFIX`          | `index.js`    | Préfixe des messages ignorés par le bot |
 | `memory.json`            | `memory.json` | Stocke l’historique des conversations par utilisateur |
 
