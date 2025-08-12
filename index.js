@@ -18,14 +18,6 @@ const INACTIVITY_LIMIT_DAYS = 30;
 const ANTI_SPAM_MS = 3000;
 const SAVE_INTERVAL_MS = 10000;
 
-// ==== Liste mots interdits ====
-const bannedWords = ['porn', 'sex', 'explicit', 'fuck', 'bitch', 'shit', 'ass', 'dick', 'cock']; // adapte comme tu veux
-
-function containsBannedWords(message) {
-    const msgLower = message.toLowerCase();
-    return bannedWords.some(word => msgLower.includes(word));
-}
-
 // ==== Initialisation ====
 const client = new Client({
     intents: [
@@ -86,17 +78,28 @@ client.on('messageCreate', async (message) => {
     if (message.channelId !== CHANNEL_ID) return;
     if (message.content.startsWith(IGNORE_PREFIX)) return;
 
-    // Filtre contenu inapproprié
-    if (containsBannedWords(message.content)) {
-        await message.reply("Désolé, je ne peux pas traiter cette demande.");
-        return;
-    }
-
     // Anti-spam
     if (lastMessageTime[message.author.id] && Date.now() - lastMessageTime[message.author.id] < ANTI_SPAM_MS) {
         return;
     }
     lastMessageTime[message.author.id] = Date.now();
+
+    // ==== Modération OpenAI ====
+    try {
+        const moderationResponse = await openai.moderations.create({
+            input: message.content,
+        });
+
+        if (moderationResponse.results[0].flagged) {
+            await message.reply("Désolé, je ne peux pas traiter cette demande.");
+            return;
+        }
+    } catch (error) {
+        console.error("Erreur lors de la modération :", error.message);
+        // Si modération en échec, on peut choisir de bloquer ou laisser passer
+        await message.reply("Problème avec la modération, réessaie plus tard.");
+        return;
+    }
 
     await message.channel.sendTyping();
     const typingInterval = setInterval(() => message.channel.sendTyping(), 5000);
