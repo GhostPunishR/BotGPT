@@ -2,7 +2,7 @@
   "CHANNEL_ID": {
     "history": [
       { "role": "system", "content": "BotGPT est un chatbot convivial." },
-      { "role": "user", "content": "Salut dans le salon 1 !" },
-      { "role": "assistant", "content": "Coucou depuis le salon 1 😄" }
+      { "role": "user", "content": "Salut !" },
+      { "role": "assistant", "content": "Coucou ! 😄" }
     ]
   }
