@@ -11,11 +11,12 @@ if (!process.env.OPENAI_KEY || !process.env.TOKEN || !process.env.CHANNEL_ID) {
 
 // ==== Config ====
 const IGNORE_PREFIX = "!";
-const CHANNEL_ID = process.env.CHANNEL_ID;
+const CHANNEL_ID = process.env.CHANNEL_ID; // Salon unique
 const MEMORY_FILE = 'memory.json';
 const MESSAGE_LIMIT = 20;
 const INACTIVITY_LIMIT_DAYS = 30;
 const ANTI_SPAM_MS = 3000;
+const SAVE_INTERVAL_MS = 10000;
 
 // ==== Initialisation ====
 const client = new Client({
@@ -30,6 +31,7 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_KEY });
 
 let userConversations = {};
 const lastMessageTime = {};
+let memoryDirty = false; // flag pour éviter de sauvegarder trop souvent
 
 // ==== Chargement mémoire ====
 if (fs.existsSync(MEMORY_FILE)) {
@@ -40,8 +42,10 @@ if (fs.existsSync(MEMORY_FILE)) {
     }
 }
 
-function saveMemory() {
+function saveMemory(force = false) {
+    if (!memoryDirty && !force) return;
     fs.writeFileSync(MEMORY_FILE, JSON.stringify(userConversations, null, 2));
+    memoryDirty = false;
 }
 
 function purgeOldMemory() {
@@ -49,11 +53,19 @@ function purgeOldMemory() {
     for (let userId in userConversations) {
         if (now - (userConversations[userId].lastInteraction || now) > INACTIVITY_LIMIT_DAYS * 86400000) {
             delete userConversations[userId];
+        } else if (userConversations[userId].history.length > MESSAGE_LIMIT) {
+            userConversations[userId].history.splice(
+                1,
+                userConversations[userId].history.length - MESSAGE_LIMIT
+            );
         }
     }
-    saveMemory();
+    memoryDirty = true;
 }
 purgeOldMemory();
+
+// Sauvegarde régulière
+setInterval(() => saveMemory(), SAVE_INTERVAL_MS);
 
 // ==== Bot prêt ====
 client.on('ready', () => {
@@ -86,6 +98,7 @@ client.on('messageCreate', async (message) => {
     // Ajouter message utilisateur
     userConversations[message.author.id].history.push({ role: 'user', content: message.content });
     userConversations[message.author.id].lastInteraction = Date.now();
+    memoryDirty = true;
 
     // Limiter historique
     if (userConversations[message.author.id].history.length > MESSAGE_LIMIT) {
@@ -110,7 +123,7 @@ client.on('messageCreate', async (message) => {
 
     // Ajouter réponse bot à l'historique
     userConversations[message.author.id].history.push({ role: 'assistant', content: botReply });
-    saveMemory();
+    memoryDirty = true;
 
     // Découpage si > 2000 caractères
     const chunkSize = 2000;
