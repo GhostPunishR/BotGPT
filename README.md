@@ -1,45 +1,65 @@
-### Discord ChatGPT-like Bot
+# Discord ChatGPT-like Bot
 
-Bot Discord interactif utilisant l’API OpenAI (GPT-3.5-turbo ou supérieur à votre choix) pour converser avec chaque utilisateur de manière personnalisée.  
-Le bot garde une mémoire locale des conversations (par utilisateur) dans un fichier JSON, pour des échanges plus naturels et continus.
+Bot Discord interactif utilisant l’API OpenAI (GPT-3.5-turbo ou supérieur) pour converser avec chaque utilisateur de manière personnalisée.  
+Chaque utilisateur dispose de sa propre mémoire de conversation, sauvegardée localement dans un fichier JSON, pour offrir un dialogue naturel et continu.
 
 ---
 
 ## Fonctionnalités
 
-- Conversations séparées par utilisateur avec contexte sauvegardé  
-- Mémoire persistante sur disque (`memory.json`)  
-- Support de plusieurs salons (configurable)  
-- Protection contre les commandes préfixées (`!`)  
-- Découpage automatique des réponses longues  
-- Facile à configurer via fichier `.env`
+- **Mémoire par utilisateur** : historique de conversation séparé pour chaque membre.
+- **Mémoire persistante** : stockage dans `memory.json` pour garder le contexte.
+- **Un seul salon dédié** : le bot répond uniquement dans le salon configuré.
+- **Filtrage des commandes** : ignore les messages commençant par un préfixe (`!` par défaut).
+- **Découpage automatique** des réponses longues en plusieurs messages.
+- **Configuration simple** via `.env`.
 
 ---
 
 ## Installation
 
-- [VisualStudioCode](https://code.visualstudio.com/)
-- [Node.js](https://nodejs.org/fr)
-- npm init -y
-- npm install discord.js dotenv openai
+1. Installer les prérequis :
+   - [Visual Studio Code](https://code.visualstudio.com/)
+   - [Node.js](https://nodejs.org/fr)
+2. Initialiser le projet :
+   ```bash
+   npm init -y
+   npm install discord.js dotenv openai
+   ```
 
 ---
 
 ## Configuration
 
-- Modifie la constante <code style="color : green">'CHANNEL_ID'</code> dans <code style="color : green">'index.js'</code> pour définir le salon où le bot répond.
-- Modifie la constante du <code style="color : green">model: 'gpt-3.5-turbo'</code> dans <code style="color : green">'index.js'</code> et mettre votre version souhaitée.
-- Modifie la constante <code style="color : green">"CHANNEL_ID"</code> dans <code style="color : green">'memory.json'</code> pour définir le salon du bot
-- Ajoute ton <code style="color : green">TOKEN DISCORD</code> et ta <code style="color : green">CLEF API OPENAI</code> dans  <code style="color : green">'.env'</code>
-- Change le préfixe dans <code style="color : green">'IGNORE_PREFIX'</code> si besoin.
+- **Salon dédié** : modifier la constante `CHANNEL_ID` dans `index.js` pour définir le salon où le bot répond.
+- **Modèle OpenAI** : changer `model: 'gpt-3.5-turbo'` dans `index.js` si vous voulez utiliser un autre modèle.
+- **Variables d’environnement** : dans `.env`, renseigner :
+  ```
+  DISCORD_TOKEN=VotreTokenDiscord
+  OPENAI_API_KEY=VotreCleAPI
+  ```
+- **Préfixe ignoré** : modifier `IGNORE_PREFIX` dans `index.js` si besoin.
+
+---
+
+### Tableau de configuration
+
+| Paramètre                | Fichier        | Description |
+|--------------------------|---------------|-------------|
+| `CHANNEL_ID`             | `index.js`    | ID du salon Discord où le bot répondra uniquement |
+| `model`                  | `index.js`    | Modèle OpenAI utilisé (`gpt-3.5-turbo`, `gpt-4`, etc.) |
+| `DISCORD_TOKEN`          | `.env`        | Token de votre bot Discord |
+| `OPENAI_API_KEY`         | `.env`        | Clé API OpenAI |
+| `IGNORE_PREFIX`          | `index.js`    | Préfixe des messages ignorés par le bot |
+| `memory.json`            | `memory.json` | Stocke l’historique des conversations par utilisateur |
 
 ---
 
 ## Licence
-Ce projet est sous licence Apache License 2.0.
+Ce projet est sous licence **Apache License 2.0**.  
 Voir le fichier [LICENSE](https://github.com/GhostPunishR/BotGPT/blob/main/LICENSE) pour plus de détails.
 
 ---
 
-## Soutien
+## Soutenir le projet
 [![Faire un don via PayPal](https://img.shields.io/badge/PayPal-Faire_un_don-00457C?style=for-the-badge&logo=paypal)](https://www.paypal.me/MrUrbain)
