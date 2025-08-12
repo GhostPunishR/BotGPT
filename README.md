@@ -27,10 +27,10 @@ Le bot garde une mémoire locale des conversations (par utilisateur) dans un fic
 
 ## Configuration
 
-- Modifie la constante <code style="color : green">'CHANNEL_ID'</code> dans 'index.js' pour définir le salon où le bot répond.
-- Modifie la constante du <code style="color : green">model: 'gpt-3.5-turbo'</code> dans 'index.js' et mettre votre version souhaitée.
-- Modifie la constante <code style="color : green">"CHANNEL_ID"</code> dans 'memory.json' pour définir le salon du bot
-- Ajoute ton <code style="color : green">TOKEN DISCORD</code> et ta <code style="color : green">CLEF API OPENAI</code> dans '.env'
+- Modifie la constante <code style="color : green">'CHANNEL_ID'</code> dans <code style="color : green">'index.js'</code> pour définir le salon où le bot répond.
+- Modifie la constante du <code style="color : green">model: 'gpt-3.5-turbo'</code> dans <code style="color : green">'index.js'</code> et mettre votre version souhaitée.
+- Modifie la constante <code style="color : green">"CHANNEL_ID"</code> dans <code style="color : green">'memory.json'</code> pour définir le salon du bot
+- Ajoute ton <code style="color : green">TOKEN DISCORD</code> et ta <code style="color : green">CLEF API OPENAI</code> dans  <code style="color : green">'.env'</code>
 - Change le préfixe dans <code style="color : green">'IGNORE_PREFIX'</code> si besoin.
 
 ---
