@@ -11,7 +11,7 @@ if (!process.env.OPENAI_KEY || !process.env.TOKEN || !process.env.CHANNEL_ID) {
 
 // ==== Config ====
 const IGNORE_PREFIX = "!";
-const CHANNEL_ID = process.env.CHANNEL_ID; // Salon unique
+const CHANNEL_ID = process.env.CHANNEL_ID;
 const MEMORY_FILE = 'memory.json';
 const MESSAGE_LIMIT = 20;
 const INACTIVITY_LIMIT_DAYS = 30;
@@ -63,7 +63,7 @@ client.on('ready', () => {
 // ==== Messages ====
 client.on('messageCreate', async (message) => {
     if (message.author.bot) return;
-    if (message.channelId !== CHANNEL_ID) return; // 🔹 Répond uniquement dans le salon défini
+    if (message.channelId !== CHANNEL_ID) return;
     if (message.content.startsWith(IGNORE_PREFIX)) return;
 
     // Anti-spam
