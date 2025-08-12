@@ -18,6 +18,14 @@ const INACTIVITY_LIMIT_DAYS = 30;
 const ANTI_SPAM_MS = 3000;
 const SAVE_INTERVAL_MS = 10000;
 
+// ==== Liste mots interdits ====
+const bannedWords = ['porn', 'sex', 'explicit', 'fuck', 'bitch', 'shit', 'ass', 'dick', 'cock']; // adapte comme tu veux
+
+function containsBannedWords(message) {
+    const msgLower = message.toLowerCase();
+    return bannedWords.some(word => msgLower.includes(word));
+}
+
 // ==== Initialisation ====
 const client = new Client({
     intents: [
@@ -77,6 +85,12 @@ client.on('messageCreate', async (message) => {
     if (message.author.bot) return;
     if (message.channelId !== CHANNEL_ID) return;
     if (message.content.startsWith(IGNORE_PREFIX)) return;
+
+    // Filtre contenu inapproprié
+    if (containsBannedWords(message.content)) {
+        await message.reply("Désolé, je ne peux pas traiter cette demande.");
+        return;
+    }
 
     // Anti-spam
     if (lastMessageTime[message.author.id] && Date.now() - lastMessageTime[message.author.id] < ANTI_SPAM_MS) {
