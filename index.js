@@ -11,7 +11,7 @@ if (!process.env.OPENAI_KEY || !process.env.TOKEN) {
 
 // ==== Config ====
 const IGNORE_PREFIX = "!";
-const ALLOWED_CHANNELS = 'CHANNEL_ID1';
+const ALLOWED_CHANNELS = 'CHANNEL_ID';
 const MEMORY_FILE = 'memory.json';
 const MESSAGE_LIMIT = 20;
 const INACTIVITY_LIMIT_DAYS = 30;
