@@ -37,6 +37,7 @@ Chaque utilisateur dispose de sa propre mémoire de conversation, sauvegardée l
   ```
   DISCORD_TOKEN=VotreTokenDiscord
   OPENAI_API_KEY=VotreCleAPI
+  CHANNELD_ID=VotreIDSalon
   ```
 - **Préfixe ignoré** : modifier `IGNORE_PREFIX` dans `index.js` si besoin.
 
@@ -52,6 +53,29 @@ Chaque utilisateur dispose de sa propre mémoire de conversation, sauvegardée l
 | `OPENAI_API_KEY`         | `.env`        | Clé API OpenAI |
 | `IGNORE_PREFIX`          | `index.js`    | Préfixe des messages ignorés par le bot |
 | `memory.json`            | `memory.json` | Stocke l’historique des conversations par utilisateur |
+
+---
+
+## Schéma du fonctionnement
+
+```
+     ┌────────────┐        lit           ┌──────────────┐
+     │  .env      │────────────────────▶│ index.js     │
+     │ (Clés API) │                     │ (Logique bot)│
+     └────────────┘                      └──────┬──────┘
+                                                 │
+                                                 │ utilise
+                                                 ▼
+                                        ┌────────────────┐
+                                        │ memory.json    │
+                                        │ (Mémoire par   │
+                                        │  utilisateur)  │
+                                        └────────────────┘
+```
+
+- **`.env`** → Stocke les clés API et tokens.
+- **`index.js`** → Fichier principal : reçoit les messages, appelle l’API OpenAI et gère la mémoire.
+- **`memory.json`** → Sauvegarde l’historique des conversations par utilisateur.
 
 ---
 
