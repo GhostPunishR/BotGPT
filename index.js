@@ -4,14 +4,14 @@ const { Client, GatewayIntentBits } = require('discord.js');
 const { OpenAI } = require('openai');
 
 // ==== Vérification ENV ====
-if (!process.env.OPENAI_KEY || !process.env.TOKEN) {
-    console.error("Clé API OpenAI ou Token Discord manquant !");
+if (!process.env.OPENAI_KEY || !process.env.TOKEN || !process.env.CHANNEL_ID) {
+    console.error("Clé API OpenAI, Token Discord ou CHANNEL_ID manquant !");
     process.exit(1);
 }
 
 // ==== Config ====
 const IGNORE_PREFIX = "!";
-const ALLOWED_CHANNELS = 'CHANNEL_ID';
+const CHANNEL_ID = process.env.CHANNEL_ID; // Salon unique
 const MEMORY_FILE = 'memory.json';
 const MESSAGE_LIMIT = 20;
 const INACTIVITY_LIMIT_DAYS = 30;
@@ -55,16 +55,16 @@ function purgeOldMemory() {
 }
 purgeOldMemory();
 
-// ==== Événement : Bot prêt ====
+// ==== Bot prêt ====
 client.on('ready', () => {
     console.log(`Bot connecté en tant que ${client.user.tag}`);
 });
 
-// ==== Événement : Message ====
+// ==== Messages ====
 client.on('messageCreate', async (message) => {
     if (message.author.bot) return;
+    if (message.channelId !== CHANNEL_ID) return; // 🔹 Répond uniquement dans le salon défini
     if (message.content.startsWith(IGNORE_PREFIX)) return;
-    if (!ALLOWED_CHANNELS.includes(message.channelId) && !message.mentions.users.has(client.user.id)) return;
 
     // Anti-spam
     if (lastMessageTime[message.author.id] && Date.now() - lastMessageTime[message.author.id] < ANTI_SPAM_MS) {
@@ -72,7 +72,6 @@ client.on('messageCreate', async (message) => {
     }
     lastMessageTime[message.author.id] = Date.now();
 
-    // "Typing..." pendant le traitement
     await message.channel.sendTyping();
     const typingInterval = setInterval(() => message.channel.sendTyping(), 5000);
 
@@ -113,7 +112,7 @@ client.on('messageCreate', async (message) => {
     userConversations[message.author.id].history.push({ role: 'assistant', content: botReply });
     saveMemory();
 
-    // Découpage si message > 2000 caractères
+    // Découpage si > 2000 caractères
     const chunkSize = 2000;
     for (let i = 0; i < botReply.length; i += chunkSize) {
         await message.reply(botReply.substring(i, i + chunkSize));
