@@ -11,7 +11,7 @@ if (!process.env.OPENAI_KEY || !process.env.TOKEN || !process.env.CHANNEL_ID) {
 
 // ==== Config ====
 const IGNORE_PREFIX = "!";
-const CHANNEL_ID = process.env.CHANNEL_ID; // Salon unique
+const CHANNEL_ID = process.env.CHANNEL_ID;
 const MEMORY_FILE = 'memory.json';
 const MESSAGE_LIMIT = 20;
 const INACTIVITY_LIMIT_DAYS = 30;
@@ -84,7 +84,8 @@ client.on('messageCreate', async (message) => {
     }
     lastMessageTime[message.author.id] = Date.now();
 
-    // ==== Modération OpenAI ====
+    // ==== Modération OpenAI (désactivée temporairement) ====
+    /*
     try {
         const moderationResponse = await openai.moderations.create({
             input: message.content,
@@ -96,10 +97,10 @@ client.on('messageCreate', async (message) => {
         }
     } catch (error) {
         console.error("Erreur lors de la modération :", error.message);
-        // Si modération en échec, on peut choisir de bloquer ou laisser passer
         await message.reply("Problème avec la modération, réessaie plus tard.");
         return;
     }
+    */
 
     await message.channel.sendTyping();
     const typingInterval = setInterval(() => message.channel.sendTyping(), 5000);
@@ -107,7 +108,7 @@ client.on('messageCreate', async (message) => {
     // Initialiser mémoire utilisateur
     if (!userConversations[message.author.id]) {
         userConversations[message.author.id] = {
-            history: [{ role: 'system', content: 'BotGPT est un chatbot amical et serviable.' }],
+            history: [{ role: 'system', content: 'OrionAI est un chatbot amical et serviable.' }],
             lastInteraction: Date.now()
         };
     }
