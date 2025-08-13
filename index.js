@@ -108,7 +108,7 @@ client.on('messageCreate', async (message) => {
     // Initialiser mémoire utilisateur
     if (!userConversations[message.author.id]) {
         userConversations[message.author.id] = {
-            history: [{ role: 'system', content: 'OrionAI est un chatbot amical et serviable.' }],
+            history: [{ role: 'system', content: 'BotGPT est un chatbot amical et serviable.' }],
             lastInteraction: Date.now()
         };
     }
