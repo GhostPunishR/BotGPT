@@ -1,7 +1,7 @@
 {
   "name": "BotGPT",
   "version": "1.0.0",
-  "description": "",
+  "description": "Bot Discord interactif utilisant l'API OpenAI pour converser avec les utilisateurs.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
