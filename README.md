@@ -72,7 +72,7 @@ Merci d'utiliser ce projet avec respect et responsabilité. En utilisant ce code
 - Vous ne devez pas utiliser ce logiciel pour créer, distribuer ou faciliter des contenus illégaux, offensants, ou nuisibles.
 - Vous devez respecter les conditions d’utilisation des API tierces utilisées, notamment OpenAI.
 - Vous utilisez ce logiciel à vos propres risques. L’auteur ne peut être tenu responsable des dommages directs ou indirects liés à son utilisation.
-- Toute contribution ou modification doit respecter la licence MIT associée à ce projet.
+- Toute contribution ou modification doit respecter la licence Apache 2.0 associée à ce projet.
 - En cas de doute, contactez l’auteur avant toute utilisation à des fins commerciales ou sensibles.
 
 Merci de votre compréhension et bonne utilisation !
