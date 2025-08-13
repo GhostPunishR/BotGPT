@@ -1,5 +1,5 @@
 {
-  "name": "botgpt",
+  "name": "BotGPT",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -7,8 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "GhostPunishR",
+  "license": "Apache-2.0",
   "dependencies": {
     "discord.js": "^14.21.0",
     "dotenv": "^17.2.1",
