@@ -78,6 +78,20 @@ Chaque utilisateur dispose de sa propre mémoire de conversation, sauvegardée l
 
 ---
 
+## Conditions d'utilisation
+
+Merci d'utiliser ce projet avec respect et responsabilité. En utilisant ce code, vous acceptez les conditions suivantes :
+
+- Vous ne devez pas utiliser ce logiciel pour créer, distribuer ou faciliter des contenus illégaux, offensants, ou nuisibles.
+- Vous devez respecter les conditions d’utilisation des API tierces utilisées, notamment OpenAI.
+- Vous utilisez ce logiciel à vos propres risques. L’auteur ne peut être tenu responsable des dommages directs ou indirects liés à son utilisation.
+- Toute contribution ou modification doit respecter la licence MIT associée à ce projet.
+- En cas de doute, contactez l’auteur avant toute utilisation à des fins commerciales ou sensibles.
+
+Merci de votre compréhension et bonne utilisation !
+
+---
+
 ## Licence
 Ce projet est sous licence **Apache License 2.0**.  
 Voir le fichier [LICENSE](https://github.com/GhostPunishR/BotGPT/blob/main/LICENSE) pour plus de détails.
