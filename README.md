@@ -29,20 +29,7 @@ Chaque utilisateur dispose de sa propre mémoire de conversation, sauvegardée l
 
 ---
 
-## Configuration
-
-- **Modèle OpenAI** : changer `model: 'gpt-3.5-turbo'` dans `index.js` si vous voulez utiliser un autre modèle.
-- **Variables d’environnement** : dans `.env`, renseigner :
-  ```
-  DISCORD_TOKEN = Votre_Token_Discord
-  OPENAI_API_KEY = Votre_Cle_API
-  CHANNELD_ID = Votre_ID_Salon
-  ```
-- **Préfixe ignoré** : modifier `IGNORE_PREFIX` dans `index.js` si besoin.
-
----
-
-### Tableau de configuration
+## Tableau de configuration
 
 | Paramètre                | Fichier        | Description |
 |--------------------------|---------------|-------------|
