@@ -90,7 +90,7 @@ Merci de votre compréhension et bonne utilisation !
 
 ## Licence
 Ce projet est sous licence **Apache License 2.0**.  
-Voir le fichier [LICENSE](https://github.com/GhostPunishR/BotGPT/blob/main/LICENSE) pour plus de détails.
+Voir le fichier **[LICENSE](https://github.com/GhostPunishR/BotGPT/blob/main/LICENSE)** pour plus de détails.
 
 ---
 
