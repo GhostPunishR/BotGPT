@@ -10,7 +10,6 @@ if (!process.env.OPENAI_KEY || !process.env.TOKEN || !process.env.CHANNEL_ID) {
 }
 
 // ==== Config ====
-const IGNORE_PREFIX = "!";
 const CHANNEL_ID = process.env.CHANNEL_ID;
 const MEMORY_FILE = 'memory.json';
 const MESSAGE_LIMIT = 20;
@@ -18,7 +17,7 @@ const INACTIVITY_LIMIT_DAYS = 30;
 const ANTI_SPAM_MS = 3000;
 const SAVE_INTERVAL_MS = 10000;
 
-// ==== Initialisation ====
+// ==== Initialisation client et OpenAI ====
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
@@ -29,9 +28,10 @@ const client = new Client({
 });
 const openai = new OpenAI({ apiKey: process.env.OPENAI_KEY });
 
+// ==== Mémoire et anti-spam ====
 let userConversations = {};
 const lastMessageTime = {};
-let memoryDirty = false; // flag pour éviter de sauvegarder trop souvent
+let memoryDirty = false;
 
 // ==== Chargement mémoire ====
 if (fs.existsSync(MEMORY_FILE)) {
@@ -42,6 +42,7 @@ if (fs.existsSync(MEMORY_FILE)) {
     }
 }
 
+// ==== Fonctions utilitaires ====
 function saveMemory(force = false) {
     if (!memoryDirty && !force) return;
     fs.writeFileSync(MEMORY_FILE, JSON.stringify(userConversations, null, 2));
@@ -62,50 +63,44 @@ function purgeOldMemory() {
     }
     memoryDirty = true;
 }
-purgeOldMemory();
 
-// Sauvegarde régulière
-setInterval(() => saveMemory(), SAVE_INTERVAL_MS);
+function replyInChunks(message, text) {
+    const chunkSize = 2000;
+    for (let i = 0; i < text.length; i += chunkSize) {
+        message.reply(text.substring(i, i + chunkSize));
+    }
+}
+
+// ==== Purge mémoire initiale et sauvegarde régulière ====
+purgeOldMemory();
+setInterval(() => {
+    purgeOldMemory();
+    saveMemory();
+}, SAVE_INTERVAL_MS);
 
 // ==== Bot prêt ====
 client.on('ready', () => {
     console.log(`Bot connecté en tant que ${client.user.tag}`);
 });
 
-// ==== Messages ====
+// ==== Gestion des messages ====
 client.on('messageCreate', async (message) => {
     if (message.author.bot) return;
-    if (message.channelId !== CHANNEL_ID) return;
-    if (message.content.startsWith(IGNORE_PREFIX)) return;
 
-    // Anti-spam
+    // Single channel seulement
+    if (message.channelId !== CHANNEL_ID) return;
+
+    // Anti-spam simple
     if (lastMessageTime[message.author.id] && Date.now() - lastMessageTime[message.author.id] < ANTI_SPAM_MS) {
         return;
     }
     lastMessageTime[message.author.id] = Date.now();
 
-    // ==== Modération OpenAI (désactivée temporairement) ====
-    /*
-    try {
-        const moderationResponse = await openai.moderations.create({
-            input: message.content,
-        });
-
-        if (moderationResponse.results[0].flagged) {
-            await message.reply("Désolé, je ne peux pas traiter cette demande.");
-            return;
-        }
-    } catch (error) {
-        console.error("Erreur lors de la modération :", error.message);
-        await message.reply("Problème avec la modération, réessaie plus tard.");
-        return;
-    }
-    */
-
+    // Typing indicator
     await message.channel.sendTyping();
     const typingInterval = setInterval(() => message.channel.sendTyping(), 5000);
 
-    // Initialiser mémoire utilisateur
+    // Initialisation mémoire utilisateur
     if (!userConversations[message.author.id]) {
         userConversations[message.author.id] = {
             history: [{ role: 'system', content: 'BotGPT est un chatbot amical et serviable.' }],
@@ -143,11 +138,9 @@ client.on('messageCreate', async (message) => {
     userConversations[message.author.id].history.push({ role: 'assistant', content: botReply });
     memoryDirty = true;
 
-    // Découpage si > 2000 caractères
-    const chunkSize = 2000;
-    for (let i = 0; i < botReply.length; i += chunkSize) {
-        await message.reply(botReply.substring(i, i + chunkSize));
-    }
+    // Répondre en chunks si > 2000 caractères
+    replyInChunks(message, botReply);
 });
 
+// ==== Login ====
 client.login(process.env.TOKEN);
