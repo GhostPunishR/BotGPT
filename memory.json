@@ -1,1 +1,32 @@
-{}
+const fs = require('fs');
+
+function loadMemory(file) {
+  if (fs.existsSync(file)) {
+    try {
+      return JSON.parse(fs.readFileSync(file, 'utf8'));
+    } catch (err) {
+      console.error("Erreur de lecture mémoire :", err);
+    }
+  }
+  return {};
+}
+
+function saveMemory(file, data) {
+  fs.writeFileSync(file, JSON.stringify(data, null, 2));
+}
+
+function purgeOldMemory(userConversations, limitDays, messageLimit) {
+  const now = Date.now();
+  for (let userId in userConversations) {
+    if (now - (userConversations[userId].lastInteraction || now) > limitDays * 86400000) {
+      delete userConversations[userId];
+    } else if (userConversations[userId].history.length > messageLimit) {
+      userConversations[userId].history.splice(
+        1,
+        userConversations[userId].history.length - messageLimit
+      );
+    }
+  }
+}
+
+module.exports = { loadMemory, saveMemory, purgeOldMemory };
