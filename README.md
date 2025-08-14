@@ -1,3 +1,4 @@
+[![Wiki](https://img.shields.io/badge/Wiki-Docs-violet)](https://github.com/GhostPunishR/BotGPT/wiki)
 ![Version](https://img.shields.io/badge/Version-1.0.0-blue)
 ![Node.js](https://img.shields.io/badge/Node.js->=18.0-brightgreen)
 [![OpenAI API](https://img.shields.io/badge/OpenAI-API_required-red)](https://platform.openai.com)
