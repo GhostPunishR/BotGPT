@@ -1,7 +1,6 @@
 ![Version](https://img.shields.io/badge/Version-1.0.0-blue)
 ![Node.js](https://img.shields.io/badge/Node.js->=18.0-brightgreen)
 ![OpenAI](https://img.shields.io/badge/OpenAI-API_required-red)
-![Build Status](https://img.shields.io/github/actions/workflow/status/GhostPunishR/BotGPT/nodejs.yml?branch=main)
 [![Licence](https://img.shields.io/badge/License-Apache%202.0-green)](https://github.com/GhostPunishR/BotGPT/blob/main/LICENSE)
 [![PayPal](https://img.shields.io/badge/PayPal-Soutenir-blue?logo=paypal)](https://www.paypal.me/MrUrbain)
 
