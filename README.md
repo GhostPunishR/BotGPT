@@ -16,6 +16,15 @@ Chaque utilisateur dispose de sa propre mémoire de conversation, sauvegardée l
 
 ---
 
+## Prérequis
+
+- **Compte OpenAI :**
+Vous devez avoir un compte sur **[OpenAI](https://platform.openai.com/docs/overview)**. Une fois inscrit, vous pourrez générer une clé API nécessaire pour que le bot fonctionne.
+- **API OpenAI payante :**
+L’API n’est pas entièrement gratuite. Certaines requêtes (notamment GPT-3.5 ou GPT-4) consomment des crédits et peuvent générer des frais selon votre utilisation. Assurez-vous de vérifier votre quota et votre plan sur la plateforme OpenAI.
+
+---
+
 ## Installation
 
 1. Installer les prérequis :
