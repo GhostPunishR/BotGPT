@@ -1,3 +1,10 @@
+![Version](https://img.shields.io/badge/Version-1.0.0-blue)
+![Node.js](https://img.shields.io/badge/Node.js->=18.0-brightgreen)
+![OpenAI](https://img.shields.io/badge/OpenAI-API_required-red)
+![Build Status](https://img.shields.io/github/actions/workflow/status/GhostPunishR/BotGPT/nodejs.yml?branch=main)
+[![Licence](https://img.shields.io/badge/License-Apache%202.0-green)](https://github.com/GhostPunishR/BotGPT/blob/main/LICENSE)
+[![PayPal](https://img.shields.io/badge/PayPal-Soutenir-blue?logo=paypal)](https://www.paypal.me/MrUrbain)
+
 # Discord ChatGPT-like Bot
 
 Bot Discord interactif utilisant l’API OpenAI (GPT-3.5-turbo ou supérieur) pour converser avec chaque utilisateur de manière personnalisée.  
@@ -85,13 +92,3 @@ Merci d'utiliser ce projet avec respect et responsabilité. En utilisant ce code
 - En cas de doute, contactez l’auteur avant toute utilisation à des fins commerciales ou sensibles.
 
 Merci de votre compréhension et bonne utilisation !
-
----
-
-## Licence
-[![Licence](https://img.shields.io/badge/license-Apache%202.0-green)](https://github.com/GhostPunishR/BotGPT/blob/main/LICENSE)
-
----
-
-## Soutenir le projet
-[![Faire un don via PayPal](https://img.shields.io/badge/PayPal-Faire_un_don-00457C?style=for-the-badge&logo=paypal)](https://www.paypal.me/MrUrbain)
