@@ -28,8 +28,8 @@ L’API n’est pas entièrement gratuite. Certaines requêtes (notamment GPT-3.
 ## Installation
 
 1. Installer les prérequis :
-   - [Visual Studio Code](https://code.visualstudio.com/)
-   - [Node.js](https://nodejs.org/fr)
+   - **[Visual Studio Code](https://code.visualstudio.com/)**
+   - **[Node.js](https://nodejs.org/fr)**
 2. Initialiser le projet :
    ```bash
    npm init -y
